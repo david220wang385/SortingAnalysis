@@ -12,13 +12,19 @@ using namespace std;
 int main() {
 	
 	auto rng = std::default_random_engine{};
-	int lengths[] = { 5000, 10000, 20000, 50000 };
+	vector<int> lengths = { 5000, 10000, 20000, 50000 };
 
 	vector<int> ascend_order;
-	vector<int> descemd_order;
+	vector<int> descend_order;
 	vector<int> random_order;
-	
-	ascend_order.reserve();
+		
+	for (int i = 0; i < lengths.size(); i++) {
+		
+		ascend_order.reserve(lengths[i]);
+		descend_order.reserve(lengths[i]);
+		random_order.reserve(lengths[i]);
+	}
 
-	std::shuffle(std::begin(cards_), std::end(cards_), rng);
+	vector<int> temp;
+	std::shuffle(temp.begin(), temp.end(), rng);
 }
