@@ -17,7 +17,7 @@ void QuickSort(vector<int>& list);
 int main() {
 	
 	auto rng = std::default_random_engine{};
-	vector<int> lengths = { 10, 10000, 20000, 50000 };
+	vector<int> lengths = { 50, 10000, 20000, 50000 };
 
 	vector<int> ascend_order;
 	vector<int> descend_order;
@@ -42,12 +42,12 @@ int main() {
 		std::reverse(descend_order.begin(), descend_order.end());
 
 		// DEBUG FIXME
-		//for (auto it = random_order.begin(); it != random_order.end(); it++) {
-		//	cout << *it << " ";
-		//}
+		for (auto it = random_order.begin(); it != random_order.end(); it++) {
+			cout << *it << " ";
+		}
 		BubbleSort(ascend_order);
 		BubbleSort(random_order);
-
+		cout << endl;
 		for (auto it = random_order.begin(); it != random_order.end(); it++) {
 			cout << *it << " ";
 		}
@@ -59,19 +59,30 @@ int main() {
 
 void BubbleSort(vector<int>& list) {
 
-	bool swapped = false;
-	int temp;
+	/*int border = list.size();
+	for (int i = 0; i < list.size()-1; i++) {
+		for (int j = 0; j < border-1; j++) {
+			if (list[j] > list[j + 1]) {
+				int temp = list[j];
+				list[j] = list[j+1];
+				list[j + 1] = temp;
+			}
+		}
+		border--;
+	}*/
+
+	// Bubble sort alternate
+	bool swapped;
+	int shrink = 1;
 	do {
-		for (unsigned int i = 0; i < list.size() - 1; i++) {
+		swapped = false;		
+		for(int i = 0; i < list.size() - shrink; i++)
 			if (list[i] > list[i + 1]) {
-				temp = list[i];
+				int temp = list[i];
 				list[i] = list[i + 1];
 				list[i + 1] = temp;
 				swapped = true;
 			}
-			if (i == list.size() - 1) {
-				i = 0;
-			}
-		}
+		shrink++;
 	} while (swapped);
 }
