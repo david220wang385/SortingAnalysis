@@ -6,18 +6,21 @@
 // References
 // https://stackoverflow.com/questions/6926433/how-to-shuffle-a-stdvector
 // https://stackoverflow.com/questions/8877448/how-do-i-reverse-a-c-vector
+// https://stackoverflow.com/questions/421573/best-way-to-extract-a-subvector-from-a-vector
 // https://stackoverflow.com/questions/12231166/timing-algorithm-clock-vs-time-in-c
 
 using namespace std;
 
 void BubbleSort(vector<int>& list);
-void MergeSort(vector<int>& list);
+void swap(int* a, int* b);
+vector<int> MergeSort(vector<int> list);
+vector<int> Merge(vector<int>& leftSub, vector<int>& rightSub);
 void QuickSort(vector<int>& list);
 
 int main() {
 	
 	auto rng = std::default_random_engine{};
-	vector<int> lengths = { 50, 10000, 20000, 50000 };
+	vector<int> lengths = { 10, 10000, 20000, 50000 };
 
 	vector<int> ascend_order;
 	vector<int> descend_order;
@@ -46,7 +49,7 @@ int main() {
 			cout << *it << " ";
 		}
 		BubbleSort(ascend_order);
-		BubbleSort(random_order);
+		MergeSort(random_order);
 		cout << endl;
 		for (auto it = random_order.begin(); it != random_order.end(); it++) {
 			cout << *it << " ";
@@ -59,30 +62,61 @@ int main() {
 
 void BubbleSort(vector<int>& list) {
 
-	/*int border = list.size();
-	for (int i = 0; i < list.size()-1; i++) {
-		for (int j = 0; j < border-1; j++) {
-			if (list[j] > list[j + 1]) {
-				int temp = list[j];
-				list[j] = list[j+1];
-				list[j + 1] = temp;
-			}
-		}
-		border--;
-	}*/
-
-	// Bubble sort alternate
 	bool swapped;
 	int shrink = 1;
 	do {
 		swapped = false;		
-		for(int i = 0; i < list.size() - shrink; i++)
+		for(unsigned int i = 0; i < list.size() - shrink; i++)
 			if (list[i] > list[i + 1]) {
-				int temp = list[i];
-				list[i] = list[i + 1];
-				list[i + 1] = temp;
+				swap(list[i], list[i + 1]);
 				swapped = true;
 			}
 		shrink++;
 	} while (swapped);
+
+}
+
+// Helper function for bubble sort
+void swap(int* a, int* b) {
+	int* temp = a;
+	a = b;
+	b = temp;
+}
+
+vector<int> MergeSort(vector<int> list) {
+	if (list.size() == 1) {
+		vector<int> single(list[0]);
+		return single;
+	}
+
+	vector<int> leftSub(list[0], list[(list.size() / 2) - 1]);  
+	vector<int> rightSub(list[(list.size() / 2)], list[list.size() - 1]);
+	leftSub = MergeSort(leftSub);
+	rightSub = MergeSort(rightSub);
+
+	return Merge(leftSub, rightSub);
+}
+
+// Helper function for merge sort
+vector<int> Merge(vector<int>& leftSub, vector<int>& rightSub) {
+	vector<int> sorted;
+
+	while (!leftSub.empty() && !rightSub.empty()) {
+		if (leftSub[0] > rightSub[0]) {
+			sorted.push_back(*rightSub.erase(rightSub.begin()));
+		}
+		else {
+			sorted.push_back(*leftSub.erase(leftSub.begin()));
+		}
+	}
+
+	// Either vector is now empty
+	while (!leftSub.empty()) {
+		sorted.push_back(*leftSub.erase(leftSub.begin()));
+	}
+	while (!rightSub.empty()) {
+		sorted.push_back(*rightSub.erase(rightSub.begin()));
+	}
+
+	return sorted;
 }
