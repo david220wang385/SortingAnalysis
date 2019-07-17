@@ -17,13 +17,13 @@ void QuickSort(vector<int>& list);
 int main() {
 	
 	auto rng = std::default_random_engine{};
-	vector<int> lengths = { 5000, 10000, 20000, 50000 };
+	vector<int> lengths = { 10, 10000, 20000, 50000 };
 
 	vector<int> ascend_order;
 	vector<int> descend_order;
 	vector<int> random_order;
 		
-	for (int i = 0; i < lengths.size(); i++) {
+	for (unsigned int i = 0; i < lengths.size(); i++) {
 
 		ascend_order.clear();
 		descend_order.clear();
@@ -45,8 +45,33 @@ int main() {
 		//for (auto it = random_order.begin(); it != random_order.end(); it++) {
 		//	cout << *it << " ";
 		//}
+		BubbleSort(ascend_order);
+		BubbleSort(random_order);
+
+		for (auto it = random_order.begin(); it != random_order.end(); it++) {
+			cout << *it << " ";
+		}
 
 		return 0;
 	}
 
+}
+
+void BubbleSort(vector<int>& list) {
+
+	bool swapped = false;
+	int temp;
+	do {
+		for (unsigned int i = 0; i < list.size() - 1; i++) {
+			if (list[i] > list[i + 1]) {
+				temp = list[i];
+				list[i] = list[i + 1];
+				list[i + 1] = temp;
+				swapped = true;
+			}
+			if (i == list.size() - 1) {
+				i = 0;
+			}
+		}
+	} while (swapped);
 }
