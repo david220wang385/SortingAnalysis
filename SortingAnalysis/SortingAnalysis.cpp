@@ -20,7 +20,7 @@ void QuickSort(vector<int>& list);
 int main() {
 	
 	auto rng = std::default_random_engine{};
-	vector<int> lengths = { 10, 10000, 20000, 50000 };
+	vector<int> lengths = { 5000, 10000, 20000, 50000 };
 
 	vector<int> ascend_order;
 	vector<int> descend_order;
@@ -49,9 +49,9 @@ int main() {
 			cout << *it << " ";
 		}
 		BubbleSort(ascend_order);
-		MergeSort(random_order);
+		vector<int> rand_sorted = MergeSort(random_order);
 		cout << endl;
-		for (auto it = random_order.begin(); it != random_order.end(); it++) {
+		for (auto it = rand_sorted.begin(); it != rand_sorted.end(); it++) {
 			cout << *it << " ";
 		}
 
@@ -85,12 +85,12 @@ void swap(int* a, int* b) {
 
 vector<int> MergeSort(vector<int> list) {
 	if (list.size() == 1) {
-		vector<int> single(list[0]);
+		vector<int> single(1,list[0]);
 		return single;
 	}
 
-	vector<int> leftSub(list[0], list[(list.size() / 2) - 1]);  
-	vector<int> rightSub(list[(list.size() / 2)], list[list.size() - 1]);
+	vector<int> leftSub(list.begin(), list.begin() + (list.size() / 2));  
+	vector<int> rightSub(list.begin() + (list.size() / 2), list.end());
 	leftSub = MergeSort(leftSub);
 	rightSub = MergeSort(rightSub);
 
@@ -98,25 +98,33 @@ vector<int> MergeSort(vector<int> list) {
 }
 
 // Helper function for merge sort
-vector<int> Merge(vector<int>& leftSub, vector<int>& rightSub) {
+vector<int> Merge(vector<int>& listA, vector<int>& listB) {
+	
 	vector<int> sorted;
+	sorted.reserve(listA.size() + listB.size());
 
-	while (!leftSub.empty() && !rightSub.empty()) {
-		if (leftSub[0] > rightSub[0]) {
-			sorted.push_back(*rightSub.erase(rightSub.begin()));
+	while (!listA.empty() && !listB.empty()) {
+		if (listA[0] > listB[0]) {
+			sorted.push_back(*listB.begin());
+			listB.erase(listB.begin());
 		}
 		else {
-			sorted.push_back(*leftSub.erase(leftSub.begin()));
+			sorted.push_back(*listA.begin());
+			listA.erase(listA.begin());
 		}
 	}
 
 	// Either vector is now empty
-	while (!leftSub.empty()) {
-		sorted.push_back(*leftSub.erase(leftSub.begin()));
+	while (!listA.empty()) {
+		sorted.push_back(*listA.begin());
+		listA.erase(listA.begin());
 	}
-	while (!rightSub.empty()) {
-		sorted.push_back(*rightSub.erase(rightSub.begin()));
+	while (!listB.empty()) {
+		sorted.push_back(*listB.begin());
+		listB.erase(listB.begin());
 	}
 
 	return sorted;
 }
+
+void QuickSort(vector<int>& list);
