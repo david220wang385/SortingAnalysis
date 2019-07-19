@@ -15,12 +15,13 @@ void BubbleSort(vector<int>& list);
 void swap(int* a, int* b);
 vector<int> MergeSort(vector<int> list);
 vector<int> Merge(vector<int>& leftSub, vector<int>& rightSub);
-void QuickSort(vector<int>& list);
+void QuickSort(vector<int>& list, int lowIndex, int highIndex);
+int Partition(vector<int>& list, int lowIndex, int highIndex);
 
 int main() {
 	
 	auto rng = std::default_random_engine{};
-	vector<int> lengths = { 5000, 10000, 20000, 50000 };
+	vector<int> lengths = { 500, 10000, 20000, 50000 };
 
 	vector<int> ascend_order;
 	vector<int> descend_order;
@@ -49,9 +50,9 @@ int main() {
 			cout << *it << " ";
 		}
 		BubbleSort(ascend_order);
-		vector<int> rand_sorted = MergeSort(random_order);
+		QuickSort(random_order, 0, random_order.size());
 		cout << endl;
-		for (auto it = rand_sorted.begin(); it != rand_sorted.end(); it++) {
+		for (auto it = random_order.begin(); it != random_order.end(); it++) {
 			cout << *it << " ";
 		}
 
@@ -76,7 +77,7 @@ void BubbleSort(vector<int>& list) {
 
 }
 
-// Helper function for bubble sort
+// Helper function
 void swap(int* a, int* b) {
 	int* temp = a;
 	a = b;
@@ -127,4 +128,26 @@ vector<int> Merge(vector<int>& listA, vector<int>& listB) {
 	return sorted;
 }
 
-void QuickSort(vector<int>& list);
+void QuickSort(vector<int>& list, int lowIndex, int highIndex) {
+	
+	if (lowIndex < highIndex) {
+		int pivotIndex = Partition(list, lowIndex, highIndex);
+		QuickSort(list, lowIndex, pivotIndex);
+		QuickSort(list, pivotIndex+1, highIndex);
+	}
+}
+
+int Partition(vector<int>& list, int lowIndex, int highIndex) {
+	int pivot = list[lowIndex];
+	int leftFence = lowIndex;
+
+	for (unsigned int i = lowIndex + 1; i < highIndex; i++) {
+		if (list[i] < pivot) {
+			swap(list[i], list[leftFence]);
+			leftFence++;
+		}
+	}
+	swap(pivot, list[leftFence]);
+	return leftFence;
+}
+
